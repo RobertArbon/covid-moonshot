@@ -7,7 +7,8 @@ This should be run from the covid-moonshot/scripts directory
 import rich
 import openeye
 
-structures_path = '../structures'
+# structures_path = '../structures'
+structures_path = '../MPro_tests'
 output_basepath = '../receptors'
 
 # REMARK 350 (biological multimer symmetry operations) from 5RGG
@@ -275,14 +276,18 @@ SEQRES  24 A  306  CYS SER GLY VAL THR PHE GLN
     oedocking.OEWriteReceptorFile(receptor, receptor_filename)
 
     with oechem.oemolostream(f'{prefix}-protein.pdb') as ofs:
-        oechem.OEWriteMolecule(ofs, protein)
+        oechem.OEWriteMolecule(ofs,oechem.OEMol(protein))
     with oechem.oemolostream(f'{prefix}-ligand.mol2') as ofs:
-        oechem.OEWriteMolecule(ofs, ligand)
+        oechem.OEWriteMolecule(ofs,oechem.OEMol(ligand))
     with oechem.oemolostream(f'{prefix}-ligand.pdb') as ofs:
-        oechem.OEWriteMolecule(ofs, ligand)
+        oechem.OEWriteMolecule(ofs,oechem.OEMol(ligand))
     with oechem.oemolostream(f'{prefix}-ligand.sdf') as ofs:
-        oechem.OEWriteMolecule(ofs, ligand)
-
+        oechem.OEWriteMolecule(ofs,oechem.OEMol(ligand))
+    Mpro - N0029_0A_bound - ligand.mol2
+    Mpro - N0029_0A_bound - ligand.pdb
+    Mpro - N0029_0A_bound - ligand.sdf
+    Mpro - N0029_0A_bound - protein.pdb
+    Mpro - N0029_0A_bound - protein - thiolate.pdb
     # Filter out UNK from PDB files (which have covalent adducts)
     pdbfile_lines = [ line for line in open(f'{prefix}-protein.pdb', 'r') if 'UNK' not in line ]
     with open(f'{prefix}-protein.pdb', 'wt') as outfile:
@@ -383,17 +388,17 @@ if __name__ == '__main__':
                 pass
 
         # DEBUG:
-        #for source_pdb_file in source_pdb_files:
-        #    print(source_pdb_file)
-        #    prepare_receptor_wrapper(source_pdb_file)
-        #    print('')
-        #stop
-
-        # Process all receptors in parallel
-        from multiprocessing import Pool
-        from rich.progress import Progress
-        with Pool() as pool:
-            with Progress() as progress:
-                task = progress.add_task('[green]Sprucing structures...', total=len(source_pdb_files))
-                for i, _ in enumerate(pool.imap_unordered(prepare_receptor_wrapper, source_pdb_files)):
-                    progress.update(task, advance=1)
+        for source_pdb_file in source_pdb_files:
+           print(source_pdb_file)
+           prepare_receptor_wrapper(source_pdb_file)
+           print('')
+        # stop
+        #
+        # # Process all receptors in parallel
+        # from multiprocessing import Pool
+        # from rich.progress import Progress
+        # with Pool() as pool:
+        #     with Progress() as progress:
+        #         task = progress.add_task('[green]Sprucing structures...', total=len(source_pdb_files))
+        #         for i, _ in enumerate(pool.imap_unordered(prepare_receptor_wrapper, source_pdb_files)):
+        #             progress.update(task, advance=1)
