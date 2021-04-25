@@ -283,11 +283,7 @@ SEQRES  24 A  306  CYS SER GLY VAL THR PHE GLN
         oechem.OEWriteMolecule(ofs,oechem.OEMol(ligand))
     with oechem.oemolostream(f'{prefix}-ligand.sdf') as ofs:
         oechem.OEWriteMolecule(ofs,oechem.OEMol(ligand))
-    Mpro - N0029_0A_bound - ligand.mol2
-    Mpro - N0029_0A_bound - ligand.pdb
-    Mpro - N0029_0A_bound - ligand.sdf
-    Mpro - N0029_0A_bound - protein.pdb
-    Mpro - N0029_0A_bound - protein - thiolate.pdb
+
     # Filter out UNK from PDB files (which have covalent adducts)
     pdbfile_lines = [ line for line in open(f'{prefix}-protein.pdb', 'r') if 'UNK' not in line ]
     with open(f'{prefix}-protein.pdb', 'wt') as outfile:
